@@ -1,3 +1,6 @@
+Folder structure of this frontend in my PC:->
+ C:\Users\rahul\car-showcase\Car-Showcase-Eccentric-Project\frontend\eccentric-frontend>
+
 eccentric-frontend/
 │── src/
 │   ├── assets/         # Static images, icons, etc.
