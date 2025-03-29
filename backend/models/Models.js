@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const ModelSchema = new mongoose.Schema({
   name: { type: String, required: true },
   brand: { type: String, required: true },
@@ -8,5 +7,3 @@ const ModelSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Model", ModelSchema);
-
-

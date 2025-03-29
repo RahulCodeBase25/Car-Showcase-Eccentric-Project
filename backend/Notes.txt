@@ -12,3 +12,6 @@ eccentric-frontend/
 │── gitignore
 │──package.json
 │──package-lock.json 
+
+https://chatgpt.com/canvas/shared/67e7e44cb20c8191985eb90db7f75431
+

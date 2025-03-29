@@ -12,3 +12,16 @@ eccentric-frontend/
 │   ├── main.jsx        # Entry point
 │   ├── index.css       # Global styles
 │   └── routes.jsx      # Routing file
+
+ tasks step-by-step:
+✅ Home page ka setup – Ye ho chuka! 🎯
+🔲 Models Page – List of models display karna
+🔲 Variants Page – Each model ke 3 variants show karna
+🔲 Colors Section – Har variant ke 3 colors (hex code + price)
+🔲 Accessories Section – Har variant ke 4 accessories (images ke saath)
+🔲 Features Section – Har variant ke 4 features (images & videos)
+🔲 Categories Implement Karna – Accessories & features ke liye
+🔲 Routing Set Karna – Pages ka navigation smooth ho
+🔲 UI Improve Karna – Tailwind + animations add karna
+🔲 Final Testing – Sab kuch properly work kar raha ho
+🔲 Deployment Ready Karna – GitHub pe push aur README likhna

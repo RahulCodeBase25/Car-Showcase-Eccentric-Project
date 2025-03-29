@@ -1,23 +1,26 @@
+// backend/routes/variantRoutes.js
 const express = require("express");
 const router = express.Router();
-const Variant = require("../models/variant"); // Import Variant model
+const Variant = require("../models/variantModel");
 
-// Create a new Variant
-router.post("/", async (req, res) => {
+// Get all variants
+router.get("/", async (req, res) => {
   try {
-    const variant = new Variant(req.body);
-    await variant.save();
-    res.status(201).json(variant);
+    const variants = await Variant.find({}).populate("colors features accessories");
+    res.json(variants);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// Get all Variants
-router.get("/", async (req, res) => {
+// Get a single variant by ID
+router.get("/:id", async (req, res) => {
   try {
-    const variants = await Variant.find().populate("colors features accessories");
-    res.json(variants);
+    const variant = await Variant.findById(req.params.id).populate("colors features accessories");
+    if (!variant) {
+      return res.status(404).json({ message: "Variant not found" });
+    }
+    res.json(variant);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const Model = require("../models/models.js");
-const Variant = require("../models/variant.js");
-const Color = require("../models/colors.js");
-const Category = require("../models/categories.js");
-const Accessory = require("../models/accessories.js");
-const Feature = require("../models/features.js");
+const Model = require("../models/Models");
+const Variant = require("../models/Variant");
+const Color = require("../models/Colors");
+const Category = require("../models/Categories");
+const Accessory = require("../models/Accessories");
+const Feature = require("../models/Features");
 
-// Load .env file
+// ✅ Fix: Ensure correct .env file path
 dotenv.config({ path: "../.env" });
+
+// ✅ Debugging log
+console.log("MONGO_URI from env:", process.env.MONGO_URI);
 
 async function connectDB() {
   try {
@@ -21,26 +24,11 @@ async function connectDB() {
     console.error("❌ MongoDB Connection Error:", error.message);
     process.exit(1);
   }
-}// Sample Data
-const models = [
-  { name: "Tesla Model S", brand: "Tesla", year: 2024 },
-  { name: "Ford Mustang", brand: "Ford", year: 2023 },
-];
+}
 
-const variants = [
-  { name: "Long Range", model: "Tesla Model S", price: 79999 },
-  { name: "Plaid", model: "Tesla Model S", price: 99999 },
-];
+// Call connectDB
+connectDB();
 
-const colors = [
-  { name: "Midnight Silver", hexCode: "#333F48", price: 1000, variant: "Long Range" },
-  { name: "Pearl White", hexCode: "#FFFFFF", price: 0, variant: "Plaid" },
-];
-
-const categoriesData = [
-  { name: "Interior", type: "Accessory" },
-  { name: "Exterior", type: "Feature" }
-];
 
 const seedDB = async () => {
   try {
@@ -54,32 +42,37 @@ const seedDB = async () => {
 
     console.log("🚀 Inserting new data...");
 
-    const insertedModels = await Model.insertMany(models);
-    const modelMap = Object.fromEntries(insertedModels.map(model => [model.name, model._id]));
+    const models = await Model.insertMany([
+      { name: "Tesla Model S", brand: "Tesla" },
+      { name: "Ford Mustang", brand: "Ford" },
+    ]);
 
-    const updatedVariants = variants.map(v => ({ ...v, model: modelMap[v.model] || null }));
-    const insertedVariants = await Variant.insertMany(updatedVariants);
-    const variantMap = Object.fromEntries(insertedVariants.map(v => [v.name, v._id]));
+    const variants = await Variant.insertMany([
+      { name: "Long Range", model: models[0]._id, price: 79999 },
+      { name: "Plaid", model: models[0]._id, price: 99999 },
+    ]);
 
-    const updatedColors = colors.map(c => ({ ...c, variant: variantMap[c.variant] || null }));
-    if (updatedColors.some(c => !c.variant)) throw new Error("❌ Some colors have invalid variant references!");
+    await Model.updateOne({ _id: models[0]._id }, { variants: variants.map(v => v._id) });
 
-    await Color.insertMany(updatedColors);
-    const insertedCategories = await Category.insertMany(categoriesData);
-    const categoryMap = Object.fromEntries(insertedCategories.map(c => [c.name, c._id]));
+    const colors = await Color.insertMany([
+      { name: "Midnight Silver", hexCode: "#333F48", price: 1000, variant: variants[0]._id },
+      { name: "Pearl White", hexCode: "#FFFFFF", price: 0, variant: variants[1]._id },
+    ]);
 
-    const accessories = [
-      { name: "All-Weather Floor Mats", category: categoryMap["Interior"], price: 200 },
-      { name: "Carbon Fiber Spoiler", category: categoryMap["Exterior"], price: 1200 },
-    ];
+    const categories = await Category.insertMany([
+      { name: "Interior", type: "Accessory" },
+      { name: "Exterior", type: "Feature" },
+    ]);
 
-    const features = [
-      { name: "Autopilot", type: "Technology", description: "Full self-driving capabilities" },
-      { name: "Panoramic Roof", type: "Design", description: "Expansive glass roof" },
-    ];
+    const accessories = await Accessory.insertMany([
+      { name: "All-Weather Floor Mats", category: categories[0]._id, variant: variants[0]._id, image: "default.jpg" },
+      { name: "Carbon Fiber Spoiler", category: categories[1]._id, variant: variants[1]._id, image: "default.jpg" },
+    ]);
 
-    await Accessory.insertMany(accessories);
-    await Feature.insertMany(features);
+    const features = await Feature.insertMany([
+      { name: "Autopilot", type: "Image", url: "autopilot.jpg", category: categories[1]._id, variant: variants[0]._id },
+      { name: "Panoramic Roof", type: "Image", url: "roof.jpg", category: categories[1]._id, variant: variants[1]._id },
+    ]);
 
     console.log("🎉 Data Seeded Successfully!");
     mongoose.connection.close();
@@ -89,7 +82,4 @@ const seedDB = async () => {
   }
 };
 
-// Run the Seeder
-connectDB().then(() => {
-  console.log("Database connected, seeding...");
-});
+connectDB().then(() => seedDB());
