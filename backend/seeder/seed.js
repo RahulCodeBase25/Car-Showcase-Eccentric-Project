@@ -1,33 +1,27 @@
-require("dotenv").config({ path: "../.env" });  // Load .env from backend
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const Model = require("../models/models.js");
+const Variant = require("../models/variant.js");
+const Color = require("../models/colors.js");
+const Category = require("../models/categories.js");
+const Accessory = require("../models/accessories.js");
+const Feature = require("../models/features.js");
 
-// Import Models
-const Model = require("../models/models");
-const Variant = require("../models/variant");
-const Color = require("../models/colors");
-const Category = require("../models/categories");
-const Accessory = require("../models/accessories");
-const Feature = require("../models/features");
+// Load .env file
+dotenv.config({ path: "../.env" });
 
-const mongoURI = process.env.MONGO_URI;
-
-if (!mongoURI) {
-  console.error("❌ ERROR: MongoDB connection string is missing in .env file.");
-  process.exit(1);
-}
-
-// Connect to MongoDB
-const connectDB = async () => {
+async function connectDB() {
   try {
-    await mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("✅ MongoDB Connected Successfully!");
   } catch (error) {
     console.error("❌ MongoDB Connection Error:", error.message);
     process.exit(1);
   }
-};
-
-// Sample Data
+}// Sample Data
 const models = [
   { name: "Tesla Model S", brand: "Tesla", year: 2024 },
   { name: "Ford Mustang", brand: "Ford", year: 2023 },
@@ -39,25 +33,18 @@ const variants = [
 ];
 
 const colors = [
-  { name: "Midnight Silver", hex: "#333F48", price: 1000 },
-  { name: "Pearl White", hex: "#FFFFFF", price: 0 },
+  { name: "Midnight Silver", hexCode: "#333F48", price: 1000, variant: "Long Range" },
+  { name: "Pearl White", hexCode: "#FFFFFF", price: 0, variant: "Plaid" },
 ];
 
-const categories = [{ name: "Interior" }, { name: "Exterior" }];
-
-const accessories = [
-  { name: "All-Weather Floor Mats", category: "Interior", price: 200 },
-  { name: "Carbon Fiber Spoiler", category: "Exterior", price: 1200 },
-];
-
-const features = [
-  { name: "Autopilot", type: "Technology", description: "Full self-driving capabilities" },
-  { name: "Panoramic Roof", type: "Design", description: "Expansive glass roof" },
+const categoriesData = [
+  { name: "Interior", type: "Accessory" },
+  { name: "Exterior", type: "Feature" }
 ];
 
 const seedDB = async () => {
   try {
-    // Clear previous data
+    console.log("🧹 Clearing old data...");
     await Model.deleteMany();
     await Variant.deleteMany();
     await Color.deleteMany();
@@ -65,34 +52,36 @@ const seedDB = async () => {
     await Accessory.deleteMany();
     await Feature.deleteMany();
 
-    // Insert Models first
+    console.log("🚀 Inserting new data...");
+
     const insertedModels = await Model.insertMany(models);
-    
-    // Map model names to ObjectIds
-    const modelMap = {};
-    insertedModels.forEach((model) => {
-      modelMap[model.name] = model._id;
-    });
+    const modelMap = Object.fromEntries(insertedModels.map(model => [model.name, model._id]));
 
-    // Convert variant model names to ObjectIds
-    const updatedVariants = variants.map((variant) => ({
-      ...variant,
-      model: modelMap[variant.model] || null, // Assign ObjectId or null
-    }));
+    const updatedVariants = variants.map(v => ({ ...v, model: modelMap[v.model] || null }));
+    const insertedVariants = await Variant.insertMany(updatedVariants);
+    const variantMap = Object.fromEntries(insertedVariants.map(v => [v.name, v._id]));
 
-    // Check if any model reference is missing
-    if (updatedVariants.some((v) => !v.model)) {
-      throw new Error("❌ Some variants have invalid model references!");
-    }
+    const updatedColors = colors.map(c => ({ ...c, variant: variantMap[c.variant] || null }));
+    if (updatedColors.some(c => !c.variant)) throw new Error("❌ Some colors have invalid variant references!");
 
-    // Insert updated variants
-    await Variant.insertMany(updatedVariants);
-    await Color.insertMany(colors);
-    await Category.insertMany(categories);
+    await Color.insertMany(updatedColors);
+    const insertedCategories = await Category.insertMany(categoriesData);
+    const categoryMap = Object.fromEntries(insertedCategories.map(c => [c.name, c._id]));
+
+    const accessories = [
+      { name: "All-Weather Floor Mats", category: categoryMap["Interior"], price: 200 },
+      { name: "Carbon Fiber Spoiler", category: categoryMap["Exterior"], price: 1200 },
+    ];
+
+    const features = [
+      { name: "Autopilot", type: "Technology", description: "Full self-driving capabilities" },
+      { name: "Panoramic Roof", type: "Design", description: "Expansive glass roof" },
+    ];
+
     await Accessory.insertMany(accessories);
     await Feature.insertMany(features);
 
-    console.log("🚀 Data Seeded Successfully!");
+    console.log("🎉 Data Seeded Successfully!");
     mongoose.connection.close();
   } catch (error) {
     console.error("❌ Seeding Error:", error);
@@ -100,6 +89,7 @@ const seedDB = async () => {
   }
 };
 
-
 // Run the Seeder
-connectDB().then(seedDB);
+connectDB().then(() => {
+  console.log("Database connected, seeding...");
+});
