@@ -55,9 +55,9 @@ const features = [
   { name: "Panoramic Roof", type: "Design", description: "Expansive glass roof" },
 ];
 
-// Function to Insert Data
 const seedDB = async () => {
   try {
+    // Clear previous data
     await Model.deleteMany();
     await Variant.deleteMany();
     await Color.deleteMany();
@@ -65,8 +65,28 @@ const seedDB = async () => {
     await Accessory.deleteMany();
     await Feature.deleteMany();
 
-    await Model.insertMany(models);
-    await Variant.insertMany(variants);
+    // Insert Models first
+    const insertedModels = await Model.insertMany(models);
+    
+    // Map model names to ObjectIds
+    const modelMap = {};
+    insertedModels.forEach((model) => {
+      modelMap[model.name] = model._id;
+    });
+
+    // Convert variant model names to ObjectIds
+    const updatedVariants = variants.map((variant) => ({
+      ...variant,
+      model: modelMap[variant.model] || null, // Assign ObjectId or null
+    }));
+
+    // Check if any model reference is missing
+    if (updatedVariants.some((v) => !v.model)) {
+      throw new Error("❌ Some variants have invalid model references!");
+    }
+
+    // Insert updated variants
+    await Variant.insertMany(updatedVariants);
     await Color.insertMany(colors);
     await Category.insertMany(categories);
     await Accessory.insertMany(accessories);
@@ -79,6 +99,7 @@ const seedDB = async () => {
     mongoose.connection.close();
   }
 };
+
 
 // Run the Seeder
 connectDB().then(seedDB);
