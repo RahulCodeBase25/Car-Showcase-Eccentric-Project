@@ -1,0 +1,14 @@
+Folder structure in my PC for this Backend folderP:->
+PS C:\Users\rahul\car-showcase\Car-Showcase-Eccentric-Project\backend>
+
+eccentric-frontend/
+│── config/database.js
+│──models/Accessories.js,Categories.js,Colors.js,Features.js,Models.js,Variant.js
+│──routes/accessoriesRoutes.js  ,CategoriesRoutes.js, ColorsRoutes.js, FeaturesRoutes.js,ModelsRoutes.js,VariantRoutes.js
+│── seeder/seeds.js
+│──.env
+│── server.js
+│── node_modules
+│── gitignore
+│──package.json
+│──package-lock.json 

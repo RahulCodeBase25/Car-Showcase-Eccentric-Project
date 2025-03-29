@@ -1,0 +1,11 @@
+eccentric-frontend/
+│── src/
+│   ├── assets/         # Static images, icons, etc.
+│   ├── components/     # Reusable UI components
+│   ├── pages/          # Page components
+│   ├── store/          # Zustand for state management
+│   ├── services/       # API calls (Axios)
+│   ├── App.jsx         # Main app component
+│   ├── main.jsx        # Entry point
+│   ├── index.css       # Global styles
+│   └── routes.jsx      # Routing file
