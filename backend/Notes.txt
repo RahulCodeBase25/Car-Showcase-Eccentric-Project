@@ -15,3 +15,5 @@ eccentric-frontend/
 
 https://chatgpt.com/canvas/shared/67e7e44cb20c8191985eb90db7f75431
 
+"Bhai last time jo fix kiya tha, waisa hi issue hai"
+
