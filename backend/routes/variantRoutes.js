@@ -1,7 +1,7 @@
 // backend/routes/variantRoutes.js
 const express = require("express");
 const router = express.Router();
-const Variant = require("../models/variantModel");
+const Variant = require("../models/variant");
 
 // Get all variants
 router.get("/", async (req, res) => {

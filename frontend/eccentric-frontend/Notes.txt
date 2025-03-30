@@ -1,0 +1,67 @@
+Folder structure of this frontend in my PC:->
+ C:\Users\rahul\car-showcase\Car-Showcase-Eccentric-Project\frontend\eccentric-frontend>
+
+eccentric-frontend/
+│── public
+├──/assets
+├──/images/Car1.png
+├──videos/Car1.mp4
+│── src/
+│   ├── assets/         # Static images, icons, etc.
+│   ├── components/     # Reusable UI components
+│   ├── pages/          # Page components
+│   ├── store/          # Zustand for state management
+│   ├── services/       # API calls (Axios)
+│   ├── App.jsx         # Main app component
+│   ├── main.jsx        # Entry point
+│   ├── index.css       # Global styles
+│   └── routes.jsx      # Routing file
+│   └── api/fetchVariants.js           
+
+ tasks step-by-step:
+✅ Home page ka setup – Ye ho chuka! 🎯
+🔲 Models Page – List of models display karna
+🔲 Variants Page – Each model ke 3 variants show karna
+🔲 Colors Section – Har variant ke 3 colors (hex code + price)
+🔲 Accessories Section – Har variant ke 4 accessories (images ke saath)
+🔲 Features Section – Har variant ke 4 features (images & videos)
+🔲 Categories Implement Karna – Accessories & features ke liye
+🔲 Routing Set Karna – Pages ka navigation smooth ho
+🔲 UI Improve Karna – Tailwind + animations add karna
+🔲 Final Testing – Sab kuch properly work kar raha ho
+🔲 Deployment Ready Karna – GitHub pe push aur README likhna
+
+
+eccentric-frontend/
+│── public/
+│   ├── assets/
+│   ├── images/Car1.png
+│   ├── videos/Car1.mp4
+│
+├── src/
+│   ├── components/     # Reusable UI components
+│   │   ├── Header.jsx
+│   │   ├── Footer.jsx
+│   │   ├── CarDisplay.jsx   # Car image + video hover effect
+│   │   ├── ModelSelector.jsx # Car model selection
+│   │   ├── ColorSelector.jsx # Color selection buttons
+│   │   ├── FeatureSection.jsx # Accessories & features
+│   │   ├── Button.jsx    # Framer Motion animated button
+│   │
+│   ├── pages/          # Page components
+│   │   ├── HomePage.jsx  # Home page UI
+│   │   ├── About.jsx
+│   │   ├── Contact.jsx
+│   │   ├── VariantPage.jsx
+│   │
+│   ├── store/          # Zustand for state management
+│   │   ├── useStore.js
+│   ├── routes/          
+│   │   ├── index.jsx
+│   ├── api/           
+│   │   ├── fetchVariants.js
+│   │   ├── api.js
+│   ├── App.jsx         # Main app component
+│   ├── main.jsx        # Entry point
+│   ├── index.css       # Global styles
+│   ├── routes.jsx      # Routing file
