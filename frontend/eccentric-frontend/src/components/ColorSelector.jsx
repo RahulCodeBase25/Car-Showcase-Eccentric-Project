@@ -13,7 +13,7 @@ const ColorSelector = () => {
 
   return (
     <div className="text-center py-6">
-      <h2 className="text-3xl font-bold mb-4">Choose Your Color</h2>
+      <h2 className="text-3xl font-bold mb-4">Explore Our Vibrant Shades!</h2>
       <div className="flex justify-center gap-6">
         {colors.map((color) => (
           <motion.div
