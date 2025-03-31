@@ -14,21 +14,4 @@ html {
     padding: 0;
   }
   
-  /* Custom container */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
   
-  /* Button styles */
-  .btn {
-    @apply px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all;
-  }
-  
-  /* Flex utilities */
-  .flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }

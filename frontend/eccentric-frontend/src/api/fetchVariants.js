@@ -1,5 +1,3 @@
-// src/api/fetchVariants.js
-
 import axios from 'axios';
 
 const fetchVariants = async (modelId) => {

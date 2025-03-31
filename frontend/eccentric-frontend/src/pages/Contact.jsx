@@ -1,4 +1,3 @@
-// Contact.jsx - Contact Page
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";

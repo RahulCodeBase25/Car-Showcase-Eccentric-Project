@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import VariantPage from "./pages/VariantPage";
-import ModelSelector from "./components/ModelSelector"; // Import ModelSelector
+import ModelSelector from "./components/ModelSelector"; 
 
 const RoutesComponent = () => {
   return (
@@ -11,7 +11,7 @@ const RoutesComponent = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/models" element={<ModelSelector />} /> {/* Added ModelSelector Route */}
+      <Route path="/models" element={<ModelSelector />} /> 
       <Route path="/variants" element={<VariantPage />} />
     </Routes>
   );
