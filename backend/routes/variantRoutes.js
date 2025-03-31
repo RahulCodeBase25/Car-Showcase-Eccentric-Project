@@ -1,4 +1,3 @@
-// backend/routes/variantRoutes.js
 const express = require("express");
 const router = express.Router();
 const Variant = require("../models/variant");

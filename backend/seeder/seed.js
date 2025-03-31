@@ -7,10 +7,10 @@ const Category = require("../models/Categories");
 const Accessory = require("../models/Accessories");
 const Feature = require("../models/Features");
 
-// ✅ Fix: Ensure correct .env file path
+// I guess this is the right way to give .env path
 dotenv.config({ path: "../.env" });
 
-// ✅ Debugging log
+//Debugging log
 console.log("MONGO_URI from env:", process.env.MONGO_URI);
 
 async function connectDB() {
@@ -26,7 +26,7 @@ async function connectDB() {
   }
 }
 
-// Call connectDB
+// I wouldn't needed to call connectDB here bcz i have already created database.js in my config file, but anyway i am doing this
 connectDB();
 
 
