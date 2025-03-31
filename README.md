@@ -1,5 +1,9 @@
 # 🚗 Car Showcase - Virtual Car Showroom
 
+🔗 **Live Project:** [Car Showcase](https://rahul-singh-project-assignment-car-showcase.vercel.app)
+
+---
+
 ### 🌟 Project Overview
 **Car Showcase** is a virtual car showroom where users can explore different **car models, variants, colors, features, and accessories** with a visually appealing and interactive UI. The app provides a seamless experience, allowing users to navigate through various sections dynamically.
 
