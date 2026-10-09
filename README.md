@@ -1,79 +1,77 @@
-# 🚗 Car Showcase - Virtual Car Showroom
+# Eccentric Motors · Car configurator
 
-🔗 **Live Project:** [Car Showcase](https://rahul-singh-project-assignment-car-showcase.vercel.app)
+A full-stack car configurator for a made-up electric car brand. Pick a model, trim, paint, wheels and options; the server prices the build as you click; save it as a short shareable code; then book a test drive at a showroom with live slot availability.
 
----
+**Live:** https://rahul-singh-project-assignment-car-showcase.vercel.app (the API is on a free tier, so the first load can take up to a minute)
 
-### 🌟 Project Overview
-**Car Showcase** is a virtual car showroom where users can explore different **car models, variants, colors, features, and accessories** with a visually appealing and interactive UI. The app provides a seamless experience, allowing users to navigate through various sections dynamically.
+![Configurator](docs/configurator.png)
 
-This project showcases my ability to build a **full-stack web application** with a clean UI, structured backend, and smooth interactions using modern web technologies.
+## What it does
 
----
+- **Live configurator.** The cars are drawn as SVG, not photos, so the paint colour and wheel style change on the actual car with a smooth transition. Specs (range, 0–100, top speed) update with the trim.
+- **Server-side pricing.** The browser sends the chosen options and the API returns line items and a total. It checks that every option belongs to that model, ignores any price the client sends, and handles packages that come free with a trim.
+- **The URL is the state.** `/build/volt?trim=track&color=ember&wheels=sport` reloads to the same car, so back, refresh and copy-paste all work.
+- **Shareable builds.** Saving stores the build with its quote and returns a 6-character code (no look-alike characters such as 0/O or 1/I). Share links also carry the configuration, so a link still works if the demo database has been reset.
+- **Test-drive booking.** Showrooms, bookable days (tomorrow to 30 days ahead, closed Sundays, in the showrooms' time zone) and times with live availability. Each slot has two demo cars. A unique index on `(showroom, date, time, car)` means two people racing for the last car can't both get it, and a second index allows one booking per person per day. The confirmation can be added to a calendar (`.ics`).
+- **Details that matter.** Per-IP rate limits on writes, input validation, friendly error messages, a notice while the free server wakes up, labelled controls that work with a keyboard, reduced-motion support, and a mobile layout with a sticky price bar.
 
-## 🛠️ Tech Stack
-### 🔹 **Frontend**: React (Vite) + TailwindCSS + Zustand + Framer Motion + Axios
-- **React (Vite)** → Fast and optimized frontend framework.
-- **TailwindCSS** → Utility-first CSS for rapid styling.
-- **Zustand** → Lightweight state management.
-- **Framer Motion** → Smooth animations & transitions.
-- **Axios** → API request handling.
+## Stack
 
-### 🔹 **Backend**: Node.js + Express.js + MongoDB + Mongoose
-- **Node.js & Express.js** → Server-side logic and API handling.
-- **MongoDB & Mongoose** → NoSQL database and schema management.
-- **Dotenv** → Environment variable management.
-- **CORS** → Cross-origin request handling.
+| | |
+|---|---|
+| Frontend | React 19, Vite, Tailwind CSS 4, Framer Motion, Zustand, React Router |
+| Backend | Node.js, Express 5, Mongoose 8, MongoDB |
+| Tests | `node:test` + Supertest against an in-memory MongoDB (16 tests) |
+| Hosting | Vercel (frontend, proxies `/api`) and Render (API) |
 
----
+## Run it locally
 
-## 📂 Project Structure
-### **Frontend Highlights**
-✅ Home page setup with structured layout.<br>
-✅ Models Page – Displaying available car models.<br>
-✅ Variants Page – Showing 3 variants per model.<br>
-✅ Colors Section – Displaying colors with hex codes & pricing.<br>
-✅ Accessories & Features Section – Showcasing additional car details with images & videos.<br>
-✅ Smooth navigation & routing with enhanced UI using TailwindCSS & Framer Motion.<br>
-✅ Integrated animations & state management for dynamic interactions.<br>
-✅ Final testing to ensure responsiveness & smooth user experience.<br>
-
-### **Backend Highlights**
-✅ Structured **REST API** with Express.js & MongoDB.<br>
-✅ Created models & routes for **Cars, Variants, Colors, Accessories, and Features**.<br>
-✅ Implemented database connection using Mongoose.<br>
-✅ Built API endpoints for fetching and managing car-related data.<br>
-✅ Dummy data integration to ensure UI functionality.<br>
-✅ Backend structured but not fully connected due to time constraints.<br>
-
----
-
-## 🚀 How to Run the Project
-### **1️⃣ Clone the Repository**
 ```bash
-git clone <repo-link>
-```
-
-### **2️⃣ Install Dependencies**
-Navigate to frontend & backend separately and run:
-```bash
+# API on http://localhost:5000
+cd backend
 npm install
-```
+npm run dev        # no MONGODB_URI? it starts an in-memory MongoDB
+npm test
 
-### **3️⃣ Run the Frontend**
-```bash
+# Frontend on http://localhost:5173 (proxies /api to the API)
+cd frontend/eccentric-frontend
+npm install
 npm run dev
 ```
 
-### **4️⃣ Run the Backend**
-```bash
-npm start
+To keep data between restarts, copy `backend/.env.example` to `backend/.env` and set `MONGODB_URI`.
+
+## API
+
+| Method | Path | |
+|---|---|---|
+| `GET` | `/api/models` | All models with trims, colours and wheels |
+| `GET` | `/api/models/:slug` | One model |
+| `GET` | `/api/packages` | Optional extras |
+| `POST` | `/api/quote` | `{ model, trim, color, wheels, packages[] }` → line items and total |
+| `POST` | `/api/builds` | Save a configuration → `{ code, quote }` |
+| `GET` | `/api/builds/:code` | Load a saved build |
+| `GET` | `/api/test-drives/options` | Showrooms, bookable dates and times |
+| `GET` | `/api/test-drives/availability?location=&date=` | Cars left in each time slot |
+| `POST` | `/api/test-drives` | `{ name, email, model, location, date, slot, buildCode? }` → booking reference |
+
+## Project layout
+
+```
+backend/
+  src/data/catalog.js      models, prices and booking rules (seeded on start)
+  src/services/pricing.js  the only place prices are worked out
+  src/services/schedule.js bookable days in the showroom time zone
+  src/models/              Mongoose schemas (unique indexes for bookings)
+  src/app.js               routes
+  tests/                   API tests
+frontend/eccentric-frontend/
+  src/components/CarArt.jsx  the SVG cars and wheels
+  src/pages/                 Home, Configurator, SavedBuild, TestDrive, NotFound
 ```
 
----
+Eccentric Motors is fictional; feature photos are used for illustration only.
 
-## 📝 Note
-This project was assigned with a strict **3-day deadline**, but due to health issues, I couldn't fully connect the backend to the frontend or populate the backend database with real data. However, I added **dummy data in the frontend** so that the site remains functional.
+## License
 
-I am still submitting my backend code to showcase my ability to write structured backend logic. Given more time, I would have completed full backend integration seamlessly.
-
+MIT © Rahul Singh

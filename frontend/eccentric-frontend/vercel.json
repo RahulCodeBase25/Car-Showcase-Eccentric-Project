@@ -1,0 +1,7 @@
+{
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://eccentric-motors-api.onrender.com/api/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

@@ -1,22 +1,24 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "commonjs",
+  "name": "eccentric-motors-api",
+  "version": "2.0.0",
+  "description": "API for the Eccentric Motors car configurator: catalog, server-side pricing, shareable builds and test-drive booking.",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test --test-timeout=60000 tests/*.test.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "engines": { "node": ">=20" },
+  "author": "Rahul Singh",
+  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "mongoose": "^8.13.0",
-    "nodemon": "^3.1.9"
+    "express": "^5.1.0",
+    "mongodb-memory-server": "^10.1.4",
+    "mongoose": "^8.13.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.0"
   }
 }

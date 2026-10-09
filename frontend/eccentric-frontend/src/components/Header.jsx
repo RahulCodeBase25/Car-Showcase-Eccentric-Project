@@ -1,66 +1,62 @@
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
-const Header = () => {
-  const [scrolling, setScrolling] = useState(false);
+export function Wordmark({ className = "" }) {
+  return (
+    <span className={`inline-flex items-baseline gap-1.5 ${className}`}>
+      <span className="display text-[1.15rem] tracking-[0.06em]">ECCENTRIC</span>
+      <span className="eyebrow !text-[0.62rem] !tracking-[0.3em]">Motors</span>
+    </span>
+  );
+}
+
+const links = [
+  { to: "/#models", label: "Models" },
+  { to: "/build/aero", label: "Build" },
+  { to: "/test-drive", label: "Test drive" },
+];
+
+export default function Header() {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolling(true);
-      } else {
-        setScrolling(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <motion.header
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed w-full top-0 left-0 z-50 transition-all ${
-        scrolling ? "bg-black/80 backdrop-blur-md shadow-lg" : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
-        {/* Logo */}
-        <Link to="/">
-          <motion.img
-            src="/assets/images/Logo2.png"
-            alt="Logo2"
-            className="h-16 rounded-2xl"
-            whileHover={{ scale: 1.1 }}
-          />
+    <header className={`sticky top-0 z-40 transition-colors ${scrolled || open ? "bg-paper/90 backdrop-blur border-b border-line" : "border-b border-transparent"}`}>
+      <div className="wrap flex h-16 items-center justify-between">
+        <Link to="/" aria-label="Eccentric Motors home">
+          <Wordmark />
         </Link>
-
-        {/* Navigation Links */}
-        <nav className="flex space-x-6">
-          <Link
-            to="/about"
-            className="text-white hover:text-gray-300 transition duration-300"
-          >
-            About
-          </Link>
-          <Link
-            to="/variants"
-            className="text-white hover:text-gray-300 transition duration-300"
-          >
-            Variants
-          </Link>
-          <Link
-            to="/contact"
-            className="text-white hover:text-gray-300 transition duration-300"
-          >
-            Contact
-          </Link>
+        <nav className="hidden items-center gap-8 text-[0.95rem] font-medium sm:flex" aria-label="Main">
+          {links.map((l) => (
+            <NavLink key={l.to} to={l.to} className={({ isActive }) => `hover:text-accent-ink ${isActive && !l.to.includes("#") ? "text-accent-ink" : ""}`}>
+              {l.label}
+            </NavLink>
+          ))}
         </nav>
+        <button className="sm:hidden -mr-2 p-2" aria-expanded={open} aria-controls="mobile-nav" aria-label="Menu" onClick={() => setOpen((o) => !o)}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 8h16M4 16h16" />}
+          </svg>
+        </button>
       </div>
-    </motion.header>
+      {open && (
+        <nav id="mobile-nav" className="wrap flex flex-col pb-4 text-lg font-medium sm:hidden" aria-label="Main">
+          {links.map((l) => (
+            <Link key={l.to} to={l.to} className="border-t border-line py-3">
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+      )}
+    </header>
   );
-};
-
-export default Header;
+}

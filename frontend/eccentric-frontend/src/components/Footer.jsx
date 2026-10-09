@@ -1,74 +1,37 @@
-import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { Wordmark } from "./Header";
 
-const Footer = () => {
+export default function Footer() {
   return (
-    <motion.footer
-      className="bg-gray-900 text-white py-6 px-4 mt-10"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-    >
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-        <p className="text-sm">© 2025 Eccentric Cars. All rights reserved.</p>
-
-        <div className="flex space-x-4 mt-3 md:mt-0">
-          <a href="#" className="hover:text-blue-400 transition">
-            Privacy Policy
-          </a>
-          <a href="#" className="hover:text-blue-400 transition">
-            Terms of Service
-          </a>
-          <a href="#" className="hover:text-blue-400 transition">
-            Contact
-          </a>
+    <footer className="mt-24 border-t border-line">
+      <div className="wrap grid gap-8 py-12 sm:grid-cols-[1.4fr_1fr_1fr]">
+        <div>
+          <Wordmark />
+          <p className="mt-3 max-w-sm text-sm text-muted">
+            Eccentric Motors is a made-up car brand. This site is a full-stack portfolio project by{" "}
+            <a className="underline underline-offset-2 hover:text-ink" href="https://rahul-dev-portfolio.vercel.app" target="_blank" rel="noreferrer">
+              Rahul Singh
+            </a>
+            .
+          </p>
         </div>
-
-        <div className="flex space-x-4 mt-3 md:mt-0">
-          {/* LinkedIn */}
-          <a
-            href="https://www.linkedin.com/in/rahul-singh-full-stack/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:scale-110 transition transform"
-          >
-            <img
-              src="/assets/images/linkedin.png"
-              alt="LinkedIn"
-              className="w-6 h-6"
-            />
-          </a>
-
-          {/* GitHub */}
-          <a
-            href="https://github.com/RahulCodeBase25"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:scale-110 transition transform"
-          >
-            <img
-              src="/assets/images/Github.png"
-              alt="Github"
-              className="w-6 h-6"
-            />
-          </a>
-
-          {/* Instagram */}
-          <a
-            href="https://www.instagram.com/rahul_chingzzz/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:scale-110 transition transform"
-          >
-            <img
-              src="/assets/images/Instalogo.png"
-              alt="Instagram"
-              className="w-6 h-6 rounded-2xl"
-            />
-          </a>
+        <div className="text-sm">
+          <p className="eyebrow mb-3">Explore</p>
+          <ul className="space-y-2">
+            <li><Link className="hover:text-accent-ink" to="/build/aero">Build an Aero</Link></li>
+            <li><Link className="hover:text-accent-ink" to="/build/terra">Build a Terra</Link></li>
+            <li><Link className="hover:text-accent-ink" to="/build/volt">Build a Volt</Link></li>
+            <li><Link className="hover:text-accent-ink" to="/test-drive">Book a test drive</Link></li>
+          </ul>
+        </div>
+        <div className="text-sm">
+          <p className="eyebrow mb-3">Project</p>
+          <ul className="space-y-2">
+            <li><a className="hover:text-accent-ink" href="https://github.com/RahulCodeBase25/Car-Showcase-Eccentric-Project" target="_blank" rel="noreferrer">Source on GitHub</a></li>
+            <li><a className="hover:text-accent-ink" href="https://www.linkedin.com/in/rahul-singh-full-stack/" target="_blank" rel="noreferrer">LinkedIn</a></li>
+          </ul>
         </div>
       </div>
-    </motion.footer>
+    </footer>
   );
-};
-
-export default Footer;
+}
